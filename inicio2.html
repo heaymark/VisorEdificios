@@ -7,7 +7,9 @@
         <link rel="shortcut icon" href="http://cartodb.com/assets/favicon.ico" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="style.css">
-        <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/3.14/themes/css/cartodb.css" />
+        <!-- <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/3.14/themes/css/cartodb.css" /> -->
+        <link rel="stylesheet" href="https://cartodb-libs.global.ssl.fastly.net/cartodb.js/v3/3.15/themes/css/cartodb.css" />
+
     </head>
     <body>
       <div id="map"></div>
@@ -30,30 +32,37 @@
         </ul>
       </aside>
 
-      <script src="https://cartodb-libs.global.ssl.fastly.net/cartodb.js/v3/3.14/cartodb.js"></script>
+      <!-- <script src="https://cartodb-libs.global.ssl.fastly.net/cartodb.js/v3/3.14/cartodb.js"></script> -->
+      <script src="https://cartodb-libs.global.ssl.fastly.net/cartodb.js/v3/3.15/cartodb.js"></script>
+
       <script>
       $( document ).ready(function() {
         //Create the leaflet map
         var map = new L.Map('map', {
             zoomControl: true,
-            center: [-99.09942626953125,19.33123050921937],
+            center: [19.33123050921937,-99.09942626953125],
             zoom: 12
         });
         var basemap = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
         }).addTo(map);
+        // console.log(map);
         // Layers definition
         var layers = {
           'nucleos': {
             sql: 'SELECT * FROM cair',
+            cartocss: '#aloj_ocio_btn100{marker-fill-opacity: 0.9; marker-line-color: #1B7FF0; marker-line-width: 1.5; marker-width: 10; marker-fill: #3B007F; }'
           },
           'rios': {
             sql: 'SELECT * FROM edificios_en_peligro1',
+            cartocss: '#aloj_ocio_btn100{marker-fill-opacity: 0.9; marker-line-color: #EE0707; marker-line-width: 1.5; marker-width: 10; marker-fill: #3B007F; }'
           },
           'aloja': {
             sql: 'SELECT * FROM delegaciones_df_1',
+            cartocss: '#layer{polygon-fill: #D6301D;polygon-opacity: 0.7;}'
           }
         }
+        console.log(layers);
         // Empty layer
         cartodb.createLayer(map,{
             user_name: 'develop',
@@ -67,7 +76,9 @@
               // Clear the sublayers
               layer.getSubLayers().forEach(function(sublayer){sublayer.remove()});
               // For every check activated, add a sublayer
+               console.log($("input[name='layer']:checked"));
               $.each($("input[name='layer']:checked"), function(){
+                console.log($(this).attr("id"));
                   layer.createSubLayer(layers[$(this).attr("id")]);
               });
             });
