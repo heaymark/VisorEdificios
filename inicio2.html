@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title></title>
+        <link rel="shortcut icon" href="http://cartodb.com/assets/favicon.ico" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/3.14/themes/css/cartodb.css" />
+    </head>
+    <body>
+      <div id="map"></div>
+      
+      <aside class="layers">
+        <h2>Layers</h2>
+        <ul>
+          <li class="layer">
+              <input type="checkbox" id="nucleos" name="layer">
+              <label for="nucleos">Núcleos</label>
+          </li>
+          <li class="layer">
+              <input type="checkbox" id="rios" name="layer">
+              <label for="rios">Ríos</label>
+          </li>
+          <li class="layer">
+              <input type="checkbox" id="aloja" name="layer">
+              <label for="aloja">Alojamientos</label>
+          </li>
+        </ul>
+      </aside>
+
+      <script src="https://cartodb-libs.global.ssl.fastly.net/cartodb.js/v3/3.14/cartodb.js"></script>
+      <script>
+      $( document ).ready(function() {
+        //Create the leaflet map
+        var map = new L.Map('map', {
+            zoomControl: true,
+            center: [-99.09942626953125,19.33123050921937],
+            zoom: 12
+        });
+        var basemap = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
+        }).addTo(map);
+        // Layers definition
+        var layers = {
+          'nucleos': {
+            sql: 'SELECT * FROM cair',
+          },
+          'rios': {
+            sql: 'SELECT * FROM edificios_en_peligro1',
+          },
+          'aloja': {
+            sql: 'SELECT * FROM delegaciones_df_1',
+          }
+        }
+        // Empty layer
+        cartodb.createLayer(map,{
+            user_name: 'develop',
+            type: 'cartodb',
+            sublayers: []
+          })
+          .addTo(map)
+          .done(function(layer){
+            // When the layers inputs change fire this
+            $("input[name='layer']").change(function(){
+              // Clear the sublayers
+              layer.getSubLayers().forEach(function(sublayer){sublayer.remove()});
+              // For every check activated, add a sublayer
+              $.each($("input[name='layer']:checked"), function(){
+                  layer.createSubLayer(layers[$(this).attr("id")]);
+              });
+            });
+        });
+      });
+      </script>
+    </body>
+</html>
