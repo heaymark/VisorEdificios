@@ -48,15 +48,15 @@ $(document).ready(function(){
 
                         // Layers definition
                         var jsonlayers = {
-                            "cair" : {
-                                // namecap : nombretextcapa,
+                            "capas" : {
+                                namecap: data.rows[idx].layer,
                                 sql: 'SELECT * FROM '+data.rows[idx].layer,
                                 cartocss: '#aloj_ocio_btn100{marker-fill-opacity: 0.9; marker-line-color: #EE0707; marker-line-width: 1.5; marker-width: 10; marker-fill: #3B007F; }'
-                                // cartocss: "#countries['mapnik::geometry_type'=3] { polygon-fill: #fff; } 2 line 1  punto"
                             }
                         }
                         // var layers2 = layers+layers;
                         // console.log(JSON.stringify(jsonlayers));
+                        console.log(jsonlayers.capas.namecap);
                         // select_layerts(data.rows[idx].name, data.rows[idx].layer, jsonlayers);
 
                         $('<li>', {
@@ -75,32 +75,33 @@ $(document).ready(function(){
                     
                         // alert($('#delegaciones_df_1:checked').val());
 
-        if ($('#'+nombreorgin).is(':checked') ) {
-            console.log("Checkbox seleccionado "+nombreorgin);
-        }
-        
-        // Empty layer
-        cartodb.createLayer(maps,{
-            user_name: 'develop',
-            type: 'cartodb',
-            sublayers: []
-        })
-        .addTo(maps)
-        // .on('done', function(layer) {
-        .done(function(layer){
-            // When the layers inputs change fire this
-            $("input[name='layer']").change(function(){
-                // Clear the sublayers
-                layer.getSubLayers().forEach(function(sublayer){sublayer.remove()});
-                // For every check activated, add a sublayer
-                    console.log($("input[name='layer']:checked"));
-                $.each($("input[name='layer']:checked"), function(){
-                    console.log($(this).attr("id"));
-                    layer.createSubLayer(jsonlayers[$(this).attr("id")]);
-                    console.log(jsonlayers[$(this).attr("id")]);
-                });// Fin $.each($("input[name='layer']:checked"), function(){
-            }); //Fin $("input[name='layer']").change(function(){
-        });//Fin  .done(function(layer){
+                        // if ($('#'+nombreorgin).is(':checked') ) {
+                        //     console.log("Checkbox seleccionado "+nombreorgin);
+                        // }
+                        
+                        // Empty layer
+                        cartodb.createLayer(maps,{
+                            user_name: 'develop',
+                            type: 'cartodb',
+                            sublayers: []
+                        })
+                        .addTo(maps)
+                        // .on('done', function(layer) {
+                        .done(function(layer){
+                            // $("#ejemplo1").click(function(){
+                            // When the layers inputs change fire this
+                            $("input[name='layer']").change(function(){
+                                // Clear the sublayers
+                                layer.getSubLayers().forEach(function(sublayer){sublayer.remove()});
+                                // For every check activated, add a sublayer
+                                    // console.log($("input[name='layer']:checked"));
+                                $.each($("input[name='layer']:checked"), function(){
+                                    console.log($(this).attr("id"));
+                                    layer.createSubLayer(jsonlayers[$(this).attr("id")]);
+                                    console.log(jsonlayers[$(this).attr("id")]);
+                                });// Fin $.each($("input[name='layer']:checked"), function(){
+                            }); //Fin $("input[name='layer']").change(function(){
+                        });//Fin  .done(function(layer){
 
                     }//Fin for(idx in data.rows){
             });//Fin .on("done",function(data){
